@@ -1,14 +1,14 @@
 from aiohttp import web
-from .decorator import require_info_login
+from .login_service.service.decorator import require_info_login
 
 api = web.Application()
 
 # ====== async view handlers ======
 @require_info_login()
-async def api_index(request, s, sid):
+async def grade_all_api(request, s, sid):
     return web.json_response({})
 # =================================
 
 # ====== url --------- maps  ======
-api.router.add_route('GET', '/info/login/', api_index, name='api_index')
+api.router.add_route('GET', '/grade/search/', grade_all_api, name='grade_all_api')
 # =================================
