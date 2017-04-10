@@ -1,3 +1,0 @@
-[submodule "service/login_service"]
-	path = service/login_service
-	url = https://github.com/asynccnu/login_service.git
