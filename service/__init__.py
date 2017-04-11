@@ -10,7 +10,7 @@ def create_app():
     fernet_key = fernet.Fernet.generate_key()
     secret_key = base64.urlsafe_b64decode(fernet_key)
     # ====== app set ======
-    setup(app, EncryptedCookieStorage(secret_key)) # for csrf? o(*￣▽￣*)ゞ
+    setup(app, EncryptedCookieStorage(secret_key))
     # =====================
 
     # ====== url map ======

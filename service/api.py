@@ -1,8 +1,7 @@
 from aiohttp import web
 from aiohttp.web import Response
 from .spider import get_grade
-from .login_service.service.decorator import require_info_login
-from .login_service.service.spider import info_login
+from .decorator import require_info_login
 
 api = web.Application()
 
@@ -18,15 +17,16 @@ async def grade_all_api(request, s, sid, pwd, ip):
         args = dict(zip(keys, vals))
         xnm = args.get('xnm'); xqm = args.get('xqm')
         gradeList = await get_grade(s, sid, ip, xnm, xqm)
-        while gradeList[0] is None:
-            s, sid, _ip = await info_login(sid, pwd)
-            if s:
-                print(s._cookies)
-                gradeList = await get_grade(s, sid, ip, xnm, xqm)
+        # while gradeList[0] is None:
+        #     s, sid, _ip = await info_login(sid, pwd)
+        #     if s:
+        #         print(s._cookies)
+        #         gradeList = await get_grade(s, sid, ip, xnm, xqm)
+        #   return web.json_response(gradeList)
+    # else: # 404: need query string
+    #     return Response(body = b'{}',
+    #     content_type = 'application/json', status = 404)
         return web.json_response(gradeList)
-    else: # 404: need query string
-        return Response(body = b'{}',
-        content_type = 'application/json', status = 404)
 # =================================
 
 # ====== url --------- maps  ======
