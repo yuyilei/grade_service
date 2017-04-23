@@ -1,7 +1,9 @@
 import json
 import aiohttp
+from bs4 import BeautifulSoup
 
 grade_index_url = "http://122.204.187.6/cjcx/cjcx_cxDgXscj.html?doType=query&gnmkdmKey=N305005&sessionUserKey=%s"
+grade_detail_url = "http://122.204.187.6/cjcx/cjcx_cxCjxq.html?time=1492911913954&gnmkdmKey=N305005&sessionUserKey=%s"
 link_index_url = "http://portal.ccnu.edu.cn/roamingAction.do?appId=XK"
 login_ticket_url = "http://122.204.187.6/xtgl/login_tickitLogin.html"
 headers = {
@@ -31,32 +33,6 @@ headers2 = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
 }
 
-# async def _get_grade(session, payload, ip, sid):
-#     grade_url = grade_index_url % sid
-#     link_url = link_index_url
-#     async with session.get(link_url, timeout=4, headers=headers2, proxy=ip):
-#         async with session.get(login_ticket_url, headers=headers, proxy=ip):
-#             async with session.post(grade_url, data=payload, headers=headers) as resp:
-#                 try:
-#                     json_data = await resp.json()
-#                     gradeList = []
-#                     _gradeList = json_data.get('items')
-#                     for _ in _gradeList:
-#                         gradeList.append({
-#                             'course'  : _.get('kcmc'),
-#                             'credit'  : _.get('xf'),
-#                             'grade'   : _.get('cj'),
-#                             'category': _.get('kclbmc'),
-#                             'type'    : _.get('kcgsmc'),
-#                             'jxb_id'  : _.get('jxb_id'),
-#                             'kcxzmc'  : _.get('kcxzmc')
-#                         })
-#                     print('got!')
-#                     return gradeList
-#                 except json.decoder.JSONDecodeError as e:
-#                     print(e)
-#                     return [None]
-
 async def get_grade(s, sid, ip, xnm, xqm):
     payload = {
         'xnm': xnm, 'xqm': xqm,
@@ -68,14 +44,13 @@ async def get_grade(s, sid, ip, xnm, xqm):
     grade_url = grade_index_url % sid
     async with aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar(unsafe=True),
             cookies=s, headers=headers) as session:
-        # rv = await _get_grade(session, payload, ip, sid)
         async with session.post(grade_url, data=payload) as resp:
             try:
                 json_data = await resp.json()
                 gradeList = []
                 _gradeList = json_data.get('items')
                 for _ in _gradeList:
-                    gradeList.append({
+                    grade = {
                         'course'  : _.get('kcmc'),
                         'credit'  : _.get('xf'),
                         'grade'   : _.get('cj'),
@@ -83,10 +58,28 @@ async def get_grade(s, sid, ip, xnm, xqm):
                         'type'    : _.get('kcgsmc'),
                         'jxb_id'  : _.get('jxb_id'),
                         'kcxzmc'  : _.get('kcxzmc')
-                    })
-                print('got!')
+                    }
+                    await get_grade_detail(session, sid, xnm, xqm, grade)
+                    gradeList.append(grade)
                 return gradeList
+                print('got!')
             except json.decoder.JSONDecodeError as e:
                 print(e)
                 return [None]
-            # return rv
+
+async def get_grade_detail(session, sid, xnm, xqm, grade):
+    grade_detail = grade_detail_url % sid
+    async with session.post(grade_detail, data={
+        'xh_id': sid, 'jxb_id': grade['jxb_id'],
+        'xnm': xnm, 'xqm': xqm, 'kcmc': grade['course']}) as resp:
+        data = await resp.text()
+        soup = BeautifulSoup(data, 'lxml')
+        tbody = soup.tbody
+        tr = tbody.find_all('tr')
+        if (len(tr) == 1): # 总评
+            grade.update({'usual': '', 'ending': ''})
+        elif (len(tr) == 3): # 平时、期末、总评
+            usual = tr[0].find_all('td')[-1].string[:-1]
+            ending = tr[1].find_all('td')[-1].string[:-1]
+            grade.update({'usual': usual, 'ending': ending})
+        return grade
