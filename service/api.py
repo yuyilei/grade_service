@@ -30,5 +30,5 @@ async def grade_all_api(request, s, sid, pwd, ip):
 # =================================
 
 # ====== url --------- maps  ======
-api.router.add_route('GET', '/grade/search/', grade_all_api, name='grade_all_api')
+api.router.add_route('POST', '/grade/search/', grade_all_api, name='grade_all_api')
 # =================================
