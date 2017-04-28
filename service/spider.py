@@ -8,16 +8,7 @@ link_index_url = "http://portal.ccnu.edu.cn/roamingAction.do?appId=XK"
 login_ticket_url = "http://122.204.187.6/xtgl/login_tickitLogin.html"
 headers = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Encoding": "gzip, deflate, sdch",
-    "Accept-Language": "zh-CN,zh;q=0.8,en;q=0.6",
-    "Cache-Control": "no-cache",
-    "Connection": "keep-alive",
-    "Host": "122.204.187.6",
-    "Pragma": "no-cache",
-    "Upgrade-Insecure-Requests": "1",
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
-    "Origin": "http://122.204.187.6",
-    "Referer": "http://122.204.187.6/cjcx/cjcx_cxDgXscj.html"
 }
 
 headers2 = {
