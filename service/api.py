@@ -7,7 +7,7 @@ api = web.Application()
 
 # ====== async view handlers ======
 @require_info_login
-async def grade_all_api(request, s, sid, pwd, ip):
+async def grade_all_api(request, s, sid, ip):
     query_string = request.rel_url.query_string
     if query_string:
         keys = []; vals = []
@@ -17,18 +17,9 @@ async def grade_all_api(request, s, sid, pwd, ip):
         args = dict(zip(keys, vals))
         xnm = args.get('xnm'); xqm = args.get('xqm')
         gradeList = await get_grade(s, sid, ip, xnm, xqm)
-        # while gradeList[0] is None:
-        #     s, sid, _ip = await info_login(sid, pwd)
-        #     if s:
-        #         print(s._cookies)
-        #         gradeList = await get_grade(s, sid, ip, xnm, xqm)
-        #   return web.json_response(gradeList)
-    # else: # 404: need query string
-    #     return Response(body = b'{}',
-    #     content_type = 'application/json', status = 404)
         return web.json_response(gradeList)
 # =================================
 
 # ====== url --------- maps  ======
-api.router.add_route('POST', '/grade/search/', grade_all_api, name='grade_all_api')
+api.router.add_route('GET', '/grade/', grade_all_api, name='grade_all_api')
 # =================================
