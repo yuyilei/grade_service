@@ -17,7 +17,10 @@ async def grade_all_api(request, s, sid, ip):
         args = dict(zip(keys, vals))
         xnm = args.get('xnm'); xqm = args.get('xqm')
         gradeList = await get_grade(s, sid, ip, xnm, xqm)
-        return web.json_response(gradeList)
+        if gradeList:
+            return web.json_response(gradeList)
+        else:
+            return web.json_response({})
 # =================================
 
 # ====== url --------- maps  ======

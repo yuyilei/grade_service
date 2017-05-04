@@ -53,10 +53,8 @@ async def get_grade(s, sid, ip, xnm, xqm):
                     await get_grade_detail(session, sid, xnm, xqm, grade)
                     gradeList.append(grade)
                 return gradeList
-                print('got!')
             except json.decoder.JSONDecodeError as e:
-                print(e)
-                return [None]
+                return None
 
 async def get_grade_detail(session, sid, xnm, xqm, grade):
     grade_detail = grade_detail_url % sid
