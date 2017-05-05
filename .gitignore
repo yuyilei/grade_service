@@ -1,4 +1,5 @@
 container.env
+container.test.env
 **/*.pyc
 **/__pycache__/
 venv/

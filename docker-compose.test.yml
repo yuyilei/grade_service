@@ -1,0 +1,13 @@
+grade_api_test:
+    build: .
+    env_file:
+        - container.test.env
+    command: python -m tests.__init__
+    links:
+        - info_login_service
+
+info_login_service:
+    image: daocloud.io/neo1218/info_login_service 
+    command: gunicorn wsgi:app -k aiohttp.worker.GunicornWebWorker -b 0.0.0.0:8080 --log-level DEBUG
+    ports:
+        - "5555:8080"
