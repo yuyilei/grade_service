@@ -5,7 +5,7 @@ from aiohttp.test_utils import TestClient, loop_context
 
 def test_grade_api(app):
     with loop_context() as loop:
-        with TestClient(app) as client:
+        with TestClient(app, loop=loop) as client:
             
             async def get_headers():
                 auth_header = {'Authorization': 'Basic %s' % base64.b64encode(b'2014210761:2014210761')}
