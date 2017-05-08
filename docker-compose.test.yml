@@ -7,7 +7,7 @@ grade_api_test:
         - info_login_service
 
 info_login_service:
-    image: daocloud.io/neo1218/info_login_service 
+    image: daocloud.io/neo1218/info_login_service:latest
     command: gunicorn wsgi:app -k aiohttp.worker.GunicornWebWorker -b 0.0.0.0:8080 --log-level DEBUG
     ports:
         - "5555:8080"
