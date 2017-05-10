@@ -37,6 +37,7 @@ async def get_grade(s, sid, ip, xnm, xqm):
             cookies=s, headers=headers) as session:
         async with session.post(grade_url, data=payload) as resp:
             try:
+                print(await resp.text())
                 json_data = await resp.json()
                 gradeList = []
                 _gradeList = json_data.get('items')

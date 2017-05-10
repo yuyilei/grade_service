@@ -20,7 +20,7 @@ async def grade_all_api(request, s, sid, ip):
         if gradeList:
             return web.json_response(gradeList)
         else:
-            return web.json_response({})
+            return web.json_response([])
 # =================================
 
 # ====== url --------- maps  ======
