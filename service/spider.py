@@ -24,14 +24,7 @@ headers2 = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
 }
 
-async def get_grade(s, sid, ip, xnm, xqm):
-    payload = {
-        'xnm': xnm, 'xqm': xqm,
-        '_search': 'false', 'nd': '1487928673156',
-        'queryModel.showCount': 15, 'queryModel.currentPage': 1,
-        'queryModel.sortName': "", 'queryModel.sortOrder': 'asc',
-        'time': 0
-    }
+async def get_grade_perpage(s, sid, ip, xnm, xqm, payload):
     grade_url = grade_index_url % sid
     async with aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar(unsafe=True),
             cookies=s, headers=headers) as session:
@@ -55,6 +48,17 @@ async def get_grade(s, sid, ip, xnm, xqm):
                 return gradeList
             except json.decoder.JSONDecodeError as e:
                 return None
+
+async def get_grade(s, sid, ip, xnm, xqm):
+    payload = {
+        'xnm': xnm, 'xqm': xqm,
+        '_search': 'false', 'nd': '1487928673156',
+        'queryModel.showCount': 100, 'queryModel.currentPage': 1,
+        'queryModel.sortName': "", 'queryModel.sortOrder': 'asc',
+        'time': 0
+    }
+    rv = await get_grade_perpage(s, sid, ip, xnm, xqm, payload)
+    return rv
 
 async def get_grade_detail(session, sid, xnm, xqm, grade):
     grade_detail = grade_detail_url % sid
