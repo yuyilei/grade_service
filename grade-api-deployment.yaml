@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: grade-api
+  name: grade-api
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: grade-api
+    spec:
+      containers:
+      - args:
+        - gunicorn
+        - wsgi:app
+        - -k
+        - aiohttp.worker.GunicornWebWorker
+        - -b
+        - 0.0.0.0:8080
+        - --log-level
+        - DEBUG
+        image: daocloud.io/neo1218/grade_service
+        name: grade-api
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+status: {}
