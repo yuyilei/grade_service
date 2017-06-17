@@ -65,7 +65,7 @@ async def get_grade_detail(session, sid, xnm, xqm, grade):
         'xh_id': sid, 'xnm': xnm, 'xqm': xqm, 'kcmc': grade['course']}) as resp:
         data = await resp.text()
         soup = BeautifulSoup(data, 'lxml')
-        tbody = soup.tbody
+        tbody = soup.table
         tr = tbody.find_all('tr')
         if (len(tr) == 1): # 总评
             grade.update({'usual': '', 'ending': ''})
