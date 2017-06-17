@@ -40,7 +40,6 @@ async def get_grade_perpage(s, sid, ip, xnm, xqm, payload):
                         'grade'   : _.get('cj'),
                         'category': _.get('kclbmc'),
                         'type'    : _.get('kcgsmc'),
-                        'jxb_id'  : _.get('jxb_id'),
                         'kcxzmc'  : _.get('kcxzmc')
                     }
                     await get_grade_detail(session, sid, xnm, xqm, grade)
@@ -63,8 +62,7 @@ async def get_grade(s, sid, ip, xnm, xqm):
 async def get_grade_detail(session, sid, xnm, xqm, grade):
     grade_detail = grade_detail_url % sid
     async with session.post(grade_detail, data={
-        'xh_id': sid, 'jxb_id': grade['jxb_id'],
-        'xnm': xnm, 'xqm': xqm, 'kcmc': grade['course']}) as resp:
+        'xh_id': sid, 'xnm': xnm, 'xqm': xqm, 'kcmc': grade['course']}) as resp:
         data = await resp.text()
         soup = BeautifulSoup(data, 'lxml')
         tbody = soup.tbody
