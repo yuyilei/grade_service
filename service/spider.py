@@ -1,8 +1,8 @@
 import json
 import aiohttp
 from bs4 import BeautifulSoup
-
 grade_index_url = "http://122.204.187.6/cjcx/cjcx_cxDgXscj.html?doType=query&gnmkdmKey=N305005&sessionUserKey=%s"
+
 grade_detail_url = "http://122.204.187.6/cjcx/cjcx_cxCjxq.html?time=1492911913954&gnmkdmKey=N305005&sessionUserKey=%s"
 link_index_url = "http://portal.ccnu.edu.cn/roamingAction.do?appId=XK"
 login_ticket_url = "http://122.204.187.6/xtgl/login_tickitLogin.html"
@@ -40,6 +40,7 @@ async def get_grade_perpage(s, sid, ip, xnm, xqm, payload):
                         'grade'   : _.get('cj'),
                         'category': _.get('kclbmc'),
                         'type'    : _.get('kcgsmc'),
+                        'jxb_id'  : _.get('jxb_id'),
                         'kcxzmc'  : _.get('kcxzmc')
                     }
                     await get_grade_detail(session, sid, xnm, xqm, grade)
@@ -62,10 +63,11 @@ async def get_grade(s, sid, ip, xnm, xqm):
 async def get_grade_detail(session, sid, xnm, xqm, grade):
     grade_detail = grade_detail_url % sid
     async with session.post(grade_detail, data={
-        'xh_id': sid, 'xnm': xnm, 'xqm': xqm, 'kcmc': grade['course']}) as resp:
+        'xh_id': sid, 'jxb_id': grade['jxb_id'],
+        'xnm': xnm, 'xqm': xqm, 'kcmc': grade['course']}) as resp:
         data = await resp.text()
         soup = BeautifulSoup(data, 'lxml')
-        tbody = soup.table
+        tbody = soup.tbody
         tr = tbody.find_all('tr')
         if (len(tr) == 1): # 总评
             grade.update({'usual': '', 'ending': ''})
@@ -73,4 +75,5 @@ async def get_grade_detail(session, sid, xnm, xqm, grade):
             usual = tr[0].find_all('td')[-1].string[:-1]
             ending = tr[1].find_all('td')[-1].string[:-1]
             grade.update({'usual': usual, 'ending': ending})
+        del grade['jxb_id']
         return grade
