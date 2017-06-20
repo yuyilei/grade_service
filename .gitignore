@@ -1,3 +1,4 @@
+.vscode/
 container.env
 container.test.env
 **/*.pyc

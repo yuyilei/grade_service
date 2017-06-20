@@ -43,7 +43,10 @@ async def get_grade_perpage(s, sid, ip, xnm, xqm, payload):
                         'jxb_id'  : _.get('jxb_id'),
                         'kcxzmc'  : _.get('kcxzmc')
                     }
-                    await get_grade_detail(session, sid, xnm, xqm, grade)
+                    if xqm == "":
+                        _xqm = _.get('xqm')
+                    else: _xqm = xqm
+                    await get_grade_detail(session, sid, xnm, _xqm, grade)
                     gradeList.append(grade)
                 return gradeList
             except json.decoder.JSONDecodeError as e:
