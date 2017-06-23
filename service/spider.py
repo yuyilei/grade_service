@@ -49,7 +49,7 @@ async def get_grade_perpage(s, sid, ip, xnm, xqm, payload):
                     await get_grade_detail(session, sid, xnm, _xqm, grade)
                     gradeList.append(grade)
                 return gradeList
-            except json.decoder.JSONDecodeError as e:
+            except aiohttp.client_exceptions.ClientResponseError:
                 return None
 
 async def get_grade(s, sid, ip, xnm, xqm):
