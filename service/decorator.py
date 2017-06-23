@@ -21,7 +21,10 @@ def require_info_login(f):
 
         elif auth: # 兼容V1版API
             # 网络请求info_login_service拿到cookie进行
-            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36', 'Authorization': auth}
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36',
+                'Authorization': auth, 'Tag': 'v1'
+            }
             conn = aiohttp.TCPConnector(verify_ssl=False)
             async with aiohttp.ClientSession(headers=headers, connector=conn) as session:
                 async with session.get(info_login_service) as resp:
