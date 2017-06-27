@@ -78,5 +78,4 @@ async def get_grade_detail(session, sid, xnm, xqm, grade):
             usual = tr[0].find_all('td')[-1].string[:-1]
             ending = tr[1].find_all('td')[-1].string[:-1]
             grade.update({'usual': usual, 'ending': ending})
-        del grade['jxb_id']
         return grade
