@@ -31,7 +31,8 @@ def require_info_login(f):
                     if resp.status == 200:
                         json_data = await resp.json()
                         BIGipServerpool_jwc_xk = json_data.get('BIGipServerpool_jwc_xk')
-                        JSESSIONID = json_data.get('JSESSIONID')
+                        JSESSIONID = json_data.get('JSSESIONID')
+                        sid = json_data.get('sid')
                         cookies = {'BIGipServerpool_jwc_xk': BIGipServerpool_jwc_xk, 'JSESSIONID': JSESSIONID}
                         return await f(request, cookies, sid, None, *args, **kwargs)
                     elif resp.status == 403:
