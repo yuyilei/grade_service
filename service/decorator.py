@@ -10,7 +10,7 @@ def require_info_login(f):
     async def decorator(request, *args, **kwargs):
         headers = request.headers
         req_headers = dict(headers)
-        BIGipServerpool_jwc_xk = req_headers.get("Bigipserverpool_Jwc_Xk")
+        BIGipServerpool_jwc_xk = req_headers.get("Bigipserverpool")
         JSESSIONID = req_headers.get("Jsessionid")
         sid = req_headers.get("Sid")
         auth = req_headers.get("Authorization")
