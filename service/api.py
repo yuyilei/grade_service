@@ -1,7 +1,9 @@
 from aiohttp import web
 from aiohttp.web import Response
 from .spider import get_grade
+from .szkc_spider import get_szkc_grade
 from .decorator import require_info_login
+
 
 api = web.Application()
 
@@ -17,7 +19,9 @@ async def grade_all_api(request, s, sid, ip):
         args = dict(zip(keys, vals))
         xnm = args.get('xnm'); xqm = args.get('xqm')
         gradeList = await get_grade(s, sid, ip, xnm, xqm)
-        if gradeList:
+        szkcList = await get_szkc_grade(sid,xnm,xqm)
+        if gradeList :
+            gradeList.extend(szkcList)
             return web.json_response(gradeList)
         else:
             return Response(body=b'', content_type='application/json', status=403)
