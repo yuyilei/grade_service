@@ -142,7 +142,7 @@ async def pre_get_szkc_grade(s,xnm,xqm) :
         items = [3,12,16]
         for each in items :
             res_= await get_szkc_grade(s,xnm,each)
-            res.append(res_)
+            res.extend(res_)
     else :
         res = await get_szkc_grade(s,xnm,xqm)
     return res
