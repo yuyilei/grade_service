@@ -136,11 +136,23 @@ async def get_datail_grade(session,s,xnm,xqm,course) :
             course.update({'usual':qizhong,'ending':qimo})
         return course
 
+async def pre_get_szkc_grade(s,xnm,xqm) :
+    res = []
+    if xqm == "" :
+        items = [3,12,16]
+        for each in items :
+            res_= await get_szkc_grade(s,xnm,each)
+            res.append(res_)
+    else :
+        res = await get_szkc_grade(s,xnm,xqm)
+    return res
+
+
 if __name__ == '__main__' :
     s = 2016210897
     loop = asyncio.get_event_loop()
     cookies = loop.run_until_complete(login_szkc(sid,pwd))
     if cookies != None :
         print(cookies)
-        loop.run_until_complete(get_szkc_grade(s,2016,3))
+        loop.run_until_complete(pre_get_szkc_grade(s,2016,""))
     loop.close()
