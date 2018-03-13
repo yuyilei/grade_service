@@ -101,7 +101,7 @@ async def get_szkc_grade(s, xnm, xqm ):
                         "category" : "素质课",
                         "type" : "素质课",
                         "jxb_id" : each['jxb_id'],
-                        "kcxzmc": each['kclbmc']
+                        "kcxzmc": "素质" + each['kclbmc'][2:]
                     }
                     one = await get_datail_grade(session,s,xnm,xqm,one)
                     print(one)
@@ -128,10 +128,16 @@ async def get_datail_grade(session,s,xnm,xqm,course) :
         elif (len(tr) == 2): # 期末、总评, 素质课没有平时分。。。
             ending = tr[0].find_all('td')[-1].string[:-1]
             course.update({'usual': '','ending': ending})
+        elif (len(tr) == 3 ): # 有种课，有期中，期末和总评
+            qizhong = tr[0].find_all('td')[-1].string[:-1]
+            qimo = tr[1].find_all('td')[-1].string[:-1]
+            #print(type(int(float(qimo))))
+            #usual = str((float(qizhong)+float(qimo))/2)
+            course.update({'usual':qizhong,'ending':qimo})
         return course
 
 if __name__ == '__main__' :
-    s = 2016210813
+    s = 2016210897
     loop = asyncio.get_event_loop()
     cookies = loop.run_until_complete(login_szkc(sid,pwd))
     if cookies != None :
