@@ -16,7 +16,8 @@ pwd = os.getenv('ADMIN_PWD') or "ihdmx123"
 
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
+    "Connection": "keep-alive" ,
 }
 
 
@@ -101,15 +102,26 @@ async def get_szkc_grade(s, xnm, xqm ):
                         "category" : "素质课",
                         "type" : "素质课",
                         "jxb_id" : each['jxb_id'],
-                        "kcxzmc": "素质" + each['kclbmc'][2:]
+                        "kcxzmc": "素质" + each['kclbmc'][2:],
+                        "usual" : "",
+                        "ending" : "" ,
                     }
-                    one = await get_datail_grade(session,s,xnm,xqm,one)
-                    print(one)
+                    #one = await get_datail_grade(session,s,xnm,xqm,one)
+                   # print(one)
                     res.append(one)
                 return res
     return None
 
 async def get_datail_grade(session,s,xnm,xqm,course) :
+    """
+    没什么卵用。。。。 hahah
+    :param session:
+    :param s:
+    :param xnm:
+    :param xqm:
+    :param course:
+    :return:
+    """
     tlist = str(time.time()).split('.')
     t = tlist[0] + tlist[1][0:3]
     detail_url = detail_grade_url + "&time=" + t
@@ -136,16 +148,6 @@ async def get_datail_grade(session,s,xnm,xqm,course) :
             course.update({'usual':qizhong,'ending':qimo})
         return course
 
-async def pre_get_szkc_grade(s,xnm,xqm) :
-    res = []
-    if xqm == "" :
-        items = [3,12,16]
-        for each in items :
-            res_= await get_szkc_grade(s,xnm,each)
-            res.extend(res_)
-    else :
-        res = await get_szkc_grade(s,xnm,xqm)
-    return res
 
 
 if __name__ == '__main__' :
@@ -154,5 +156,5 @@ if __name__ == '__main__' :
     cookies = loop.run_until_complete(login_szkc(sid,pwd))
     if cookies != None :
         print(cookies)
-        loop.run_until_complete(pre_get_szkc_grade(s,2016,""))
+        loop.run_until_complete(get_szkc_grade(s,2016,""))
     loop.close()
